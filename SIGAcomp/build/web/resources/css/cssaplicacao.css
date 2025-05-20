@@ -1,0 +1,20 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 07/07/2017, 11:32:03
+    Author     : renandenardi
+*/
+
+.ui-growl-title{
+    color: #000000 !important;
+}
+
+.ui-growl-item{
+    border: 1px solid #000000;
+    background:#ffffff !important;
+}
+
+

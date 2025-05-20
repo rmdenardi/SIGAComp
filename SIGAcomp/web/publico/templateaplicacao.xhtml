@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Sistema Web Gerencial para Acompanhamento de Alunos - Instituto Federal Farroupilha Campus São Vicente do Sul </title>
+        <h:outputStylesheet name="./css/cssaplicacao.css"/>
+    </h:head>
+    <h:body>
+        <p:layout fullPage="true">
+
+
+            <p:layoutUnit position="north" style="border:none;" header="SIGAcomp - Sistema Web Gerencial para acompanhamento de alunos" 
+                          closable="false" resizable="false" collapsible="false">
+                
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" style="border: none" size="270" closable="false" resizable="false" collapsible="false">
+                <ui:include src="menuaplicacao.xhtml"/>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <ui:insert name="corpo">
+
+                </ui:insert>
+
+            </p:layoutUnit>
+
+
+        </p:layout>
+
+        <p:dialog header="Aviso!" appendTo="@(body)" widgetVar="dialogosair" 
+                  resizable="false" modal="true" draggable="false">
+            <h:form>
+                <p> Deseja realmente sair do sistema?</p>
+                <p:commandButton value="Sim" action="#{usuarioBean.encerrarSessao()}"/>
+            </h:form>
+        </p:dialog>
+
+
+
+    </h:body>
+
+
+</html>
+

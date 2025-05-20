@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../publico/templateaplicacao.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="corpo">
+
+        <p:growl id="mensagem"/>
+        <p:tabView style="border: none">
+            <p:tab title="Relatório - Quantidade de Atendimentos por Setor">
+
+                <h:form>
+
+                    <p:panelGrid columns="2">
+
+                        <f:facet name="header">
+                            Informe o Período
+                        </f:facet>
+                        <p:outputLabel value="Data Início:"/>
+                        <p:calendar maxdate="today" value="#{relatorioBean.data_inicial}" required="true" requiredMessage="Data Início é necessária"/>
+
+                        <p:outputLabel value="Data Fim:"/>
+                        <p:calendar maxdate="today" value="#{relatorioBean.data_final}" required="true" requiredMessage="Data Fim é necessária"/>
+                    </p:panelGrid>
+
+                    <br></br>
+                    <p:commandButton value="Gerar" ajax="false" 
+                                     action="#{relatorioBean.gerarRelatorio()}" update=":mensagem"/>
+
+
+
+                </h:form>
+            </p:tab>
+        </p:tabView>
+
+    </ui:define>
+
+</ui:composition>

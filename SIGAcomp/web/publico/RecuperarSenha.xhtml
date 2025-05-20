@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SIGAcomp - Recuperação de Senha</title>
+        <h:outputStylesheet name="./css/cssaplicacao.css"/>
+    </h:head>
+    <h:body>
+        
+        <p:growl id="mensagem"/>
+               <p:notificationBar position="top" id="notificacao" widgetVar="notificacao">
+                    <p:outputLabel value="Processando..."/>
+                </p:notificationBar>
+        <h:form id="formulario">
+            <h:panelGrid columns="2" cellpadding="5" style=" margin-top: 140px; margin-left: 470px; margin-right: 520px;">
+                <f:facet name="header">
+                    <p:outputLabel value="Recuperação de Senha"/>
+                </f:facet>
+                <p:outputLabel value="Digite o login:" for="login"/>
+                <p:inputText id="login" value="#{usuarioBean.usuario.login}" required="true" 
+                             requiredMessage="Login é necessário" maxlength="10"/>
+                <p:commandButton value="Recuperar" actionListener="#{usuarioBean.recuperarSenha()}" update="notificacao :mensagem formulario" onclick="PF('notificacao').show()"/>
+                <p:commandButton value="Voltar ao Login" action="#{usuarioBean.navegarLogin()}" process="@this"/>
+            </h:panelGrid>
+        </h:form>
+        
+
+    </h:body>
+</html>
+
+
+

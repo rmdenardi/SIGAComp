@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="templateaplicacao.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="corpo">
+        <p:growl id="mensagem"/>
+
+        <h:form id="formatendimento">
+            <p:poll interval="60" update="tabela"/>
+            <p:dataTable id="tabela" var="atend" value="#{atendimentoBean.meusatendimentos}" rows="6" 
+                         paginator="true"
+                         emptyMessage="Nenhum atendimento encontrado!"
+                         selectionMode="single" selection="#{atendimentoBean.atendimento}" rowKey="#{atend.id}" 
+                         filteredValue="#{atendimentoBean.atendimentosencontrados}">
+
+                <f:facet name="header">
+                    Meus Atendimentos
+                </f:facet>
+
+
+                <p:column headerText="Número" filterBy="#{atend.id}">
+                    <p:outputLabel value="#{atend.id}"/>
+                </p:column>
+                <p:column headerText="Data"> 
+                    <h:outputText value="#{atend.data}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Aluno" filterBy="#{atend.aluno.nome}">
+                    <h:outputText value="#{atend.aluno.nome}"/>
+                </p:column>
+
+                <p:column headerText="Situação">
+                    <h:outputText value="#{atend.situacao.descricao}"/>
+                </p:column>
+
+                <p:column headerText="Recurso">
+                    <h:outputText value="#{atend.recurso}"/>
+                </p:column>
+
+                <p:column headerText="Status">
+                    <h:outputText value="#{atend.status}"/>
+                </p:column>
+
+                <f:facet name="footer" >
+
+                    <p:commandButton style="font-family: Arial, sans-serif; background-color: appworkspace; 
+                                     border: 1px solid; margin-left: 1px; padding: 2px" 
+                                     onclick="PF('dialogoedicao').show()" icon="ui-icon-pencil" update=":formedicao" 
+                                     />
+
+                    <p:commandButton style="font-family: Arial, sans-serif; background-color: appworkspace; 
+                                     border: 1px solid; margin-left: 50px; padding: 2px" icon="ui-icon-trash" 
+                                     action="#{atendimentoBean.excluir()}" update="formatendimento :mensagem"
+                                     />
+                </f:facet>
+
+            </p:dataTable>
+
+        </h:form>
+
+        <p:dialog widgetVar="dialogoedicao" appendTo="@(body)" id="dialogo" modal="true" closable="false"
+                  draggable="false" resizable="false">
+            <f:facet name="header">
+                Editar atendimento
+            </f:facet>
+
+            <h:form id="formedicao"> 
+                <h:inputHidden value="#{atendimentoBean.atendimento.id}"/>
+                <h:inputHidden value="#{atendimentoBean.atendimento.setor_id}"/>
+                <h:panelGrid columns="2" cellpadding="5">
+
+
+                    <p:outputLabel value="Aluno atendido:"/>
+                    <p:selectOneMenu value="#{atendimentoBean.atendimento.aluno_id}" filter="true">
+
+
+                        <f:selectItems value="#{atendimentoBean.alunosencontrados}" var="aluno"
+                                       itemLabel="#{aluno.nome}, #{aluno.turma.nome}" itemValue="#{aluno.id}"/>
+                        
+
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Data:"/>
+                    <p:calendar required="true" requiredMessage="Data é necessária" 
+                                value="#{atendimentoBean.atendimento.data}">
+
+                    </p:calendar>
+
+
+                    <p:outputLabel value="Situação:"/>
+                    <p:selectOneMenu required="true"
+                                     requiredMessage="Situação é necessária" 
+                                     value="#{atendimentoBean.atendimento.situacao_id}" filter="true">
+                        <f:selectItems value="#{situacaoBean.situacoes}" var="sit" 
+                                       itemLabel="#{sit.descricao}" itemValue="#{sit.id}"/>
+
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Recurso:"/>
+                    <p:inputText required="true" requiredMessage="Recurso é necessário" 
+                                 value="#{atendimentoBean.atendimento.recurso}" validatorMessage="Recurso deve ter no mínimo
+                                 4 caracteres">
+                        <f:validateLength minimum="4"/>
+                    </p:inputText>  
+
+                    <p:outputLabel value="Tipo:"/>
+                    <p:selectOneMenu value="#{atendimentoBean.atendimento.tipo}" required="true" 
+                                     requiredMessage="Tipo é necessário" >
+                        <f:selectItem itemValue="local" itemLabel="Atendimento local"/>
+                        <f:selectItem  itemValue="encaminhamentointerno"  itemLabel="Encaminhamento Interno"/>
+                        <f:selectItem itemValue="encaminhamentoexterno" itemLabel="Encaminhamento Externo"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Local: "/>
+                    <p:selectOneMenu value="#{atendimentoBean.atendimento.local_id}">
+                        <f:selectItems value="#{localBean.listalocaisatendimentos}" var="local" itemLabel="#{local.descricao}" 
+                                       itemValue="#{local.id}"/>
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Observação:"/>
+                    <p:inputTextarea value="#{atendimentoBean.atendimento.observacao}" maxlength="200" rows="4"/>
+
+                    <p:outputLabel value="Status:"/>
+                    <p:selectOneMenu value="#{atendimentoBean.atendimento.status}" required="true" 
+                                     requiredMessage="Status é necessário"> 
+                        <f:selectItem itemValue="concluido" itemLabel="Concluído"/>
+                        <f:selectItem  itemValue="andamento" itemLabel="Em andamento"/>
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Notificar Servidores?"/> 
+                        <p:selectBooleanCheckbox itemLabel="Sim" value="#{atendimentoBean.enviaremail}"/> 
+
+                    <p:commandButton value="Salvar"
+                                     action="#{atendimentoBean.editar()}"
+                                     update="formedicao :formatendimento :mensagem"
+                                     oncomplete="if(args.edicao == true){PF('dialogoedicao').hide();}"/>
+                    <p:commandButton value="Fechar" onclick="PF('dialogoedicao').hide()"
+                                     resetValues="true" update=":formedicao"/>
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="publico/ConsultarTurma.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="adm/CadastroAluno.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="adm/CadastroCurso.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="publico/ConsultarServidor.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="publico/Login.xhtml" x="650" y="600" zoom="true"/>
+        <Node id="publico/ConsultarCurso.xhtml" x="1650" y="150" zoom="true"/>
+        <Node id="publico/corpo.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="publico/ConsultarAluno.xhtml" x="127" y="150" zoom="true"/>
+        <Node id="adm/CadastroTurma.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="adm/CadastroServidor.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="publico/ConsultarSetor.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="publico/Atendimento.xhtml" x="1400" y="150" zoom="true"/>
+        <Node id="publico/Menu.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="adm/CadastroSetor.xhtml" x="900" y="300" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

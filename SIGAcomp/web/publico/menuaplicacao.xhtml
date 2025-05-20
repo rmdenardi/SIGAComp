@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"> 
+        
+    <h:form>
+        <p:megaMenu style="height: 28px; margin-bottom: 5px; margin-right:8px;" >
+            <p:menuitem value="#{usuarioBean.consultarInformacoes()}" icon="ui-icon-person"/>
+        </p:megaMenu>
+        
+        <p:panelMenu>
+            
+            <p:submenu label="Ações" id="submenu">
+                <p:menuitem value="Início" url="../publico/Menu.jsf" icon="ui-icon-home"/>
+                <p:menuitem value="Sair" icon="ui-icon-close" onclick="PF('dialogosair').show()"/>
+
+
+            </p:submenu>
+
+            <p:submenu label="Atendimento" class="submenu">
+                <p:menuitem value=" Novo atendimento" icon="ui-icon-plus"  url="../publico/Atendimento.jsf"/>
+                <p:menuitem value=" Meus Atendimentos" icon="ui-icon-search" url="../publico/ConsultarMeusAtendimentos.jsf"/>
+                <p:menuitem value=" Demais Atendimentos" icon="ui-icon-search" url="../publico/ConsultarAtendimentosServidores.jsf"/>
+            </p:submenu>
+
+
+            <p:submenu label="Cadastro" rendered="#{autenticacaoBean.usuario.nivel != 2}" class="submenu">
+
+                <p:menuitem value="Aluno" icon="ui-icon-plus"  url="../adm/CadastroAluno.jsf" />
+                <p:menuitem value="Curso" icon="ui-icon-plus" url="../adm/CadastroCurso.jsf"/>
+                <p:menuitem value="Local" icon="ui-icon-plus" url="../adm/CadastroLocal.jsf"/>
+                <p:menuitem value="Servidor" icon="ui-icon-plus" url="../adm/CadastroServidor.jsf" />
+                <p:menuitem value="Setor" icon="ui-icon-plus" url="../adm/CadastroSetor.jsf"/>
+                <p:menuitem value="Situação" icon="ui-icon-plus" url="../adm/CadastroSituacao.jsf"/>
+                <p:menuitem value="Turma" icon="ui-icon-plus" url="../adm/CadastroTurma.jsf"/>
+
+
+            </p:submenu>
+
+            <p:submenu label="Consulta" class="submenu">
+
+
+                <p:menuitem value="Alunos" icon="ui-icon-search" url="../publico/ConsultarAluno.jsf" />
+                <p:menuitem value="Cursos" icon="ui-icon-search" url="../publico/ConsultarCurso.jsf"/>
+                <p:menuitem value="Locais" icon="ui-icon-search" url="../publico/ConsultarLocal.jsf"/>
+                <p:menuitem value="Servidores" icon="ui-icon-search" url="../publico/ConsultarServidor.jsf" />
+                <p:menuitem value="Setores" icon="ui-icon-search" url="../publico/ConsultarSetor.jsf"/>
+                <p:menuitem value="Situações" icon="ui-icon-search" url="../publico/ConsultarSituacao.jsf"/>
+                <p:menuitem value="Turmas" icon="ui-icon-search" url="../publico/ConsultarTurma.jsf"/>
+
+
+
+            </p:submenu>
+
+            <p:submenu label="Relatórios" class="submenu">
+
+
+                <p:menuitem icon="ui-icon-document" value="Histórico" 
+                            url="../publico/RelatorioHistoricoAtendimento.jsf"></p:menuitem>
+                
+                <p:menuitem icon="ui-icon-document" value="Quantidade Atendimentos" url="../adm/RelatorioAtendimentosPorServidor.jsf" 
+                            rendered="#{autenticacaoBean.usuario.nivel!= 2}" ></p:menuitem>
+                 <p:menuitem icon="ui-icon-document" value="Setor" url="../adm/RelatorioAtendimentosPorSetor.jsf"
+                            rendered="#{autenticacaoBean.usuario.nivel !=2}">
+                </p:menuitem>
+
+
+            </p:submenu>    
+
+
+            <p:submenu label="Gráficos" rendered="#{autenticacaoBean.usuario.nivel != 2}" class="submenu">
+
+                <p:menuitem icon="ui-icon-signal" value="Gráfico Setor"  url="../adm/GraficoAtendimentosPorSetor.jsf"  />
+                <p:menuitem icon="ui-icon-signal" value="Gráfico Situações" url="../adm/GraficoSituacoes.jsf"/>
+
+            </p:submenu>  
+
+        </p:panelMenu>
+
+        <p:dialog widgetVar="dialogosair" appendTo="@(body)" resizable="false" modal="true" draggable="true">
+            <h:form>
+                <p> Deseja realmente sair do sistema?</p>
+                <h:panelGrid columns="2" cellspacing="3">
+                    <p:commandButton value="Sim" action="#{autenticacaoBean.encerrarSessao()}"/>
+                    <p:commandButton value="Não" action="#" onclick="PF('dialogosair').hide()"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </h:form> 
+
+
+
+</ui:composition>

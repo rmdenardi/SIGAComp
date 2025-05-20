@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../publico/templateaplicacao.xhtml">
+
+            <ui:define name="corpo">
+
+
+                <p:growl id="mensagem"/>
+
+                <p:tabView style="border: none">
+                    <p:tab title="Cadastro de Curso">
+                        <h:form id="formcurso">
+
+
+
+                            <h:panelGrid columns="2" cellpadding="5">
+
+                                <p:outputLabel value="Nome:" for="nome"/>
+                                <p:inputTextarea  id="nome" required="true" requiredMessage="Nome é necessário"  rows="2" 
+                                                  value="#{cursoBean.curso.nome}" maxlength="45" validatorMessage="Nome deve ter no mínimo
+                                                  2 caracteres">
+                                    <f:validateLength minimum="2"/>
+                                </p:inputTextarea>
+
+                                <p:outputLabel value="Coord Curso:" for="coordcurso"/>
+                                <p:inputText  id="coordcurso" required="true"  requiredMessage="Coordenador do curso é necessário" 
+                                              value="#{cursoBean.curso.coordenador_curso}" maxlength="45" 
+                                              validatorMessage="Coord curso deve ter no mínimo 3 caracteres">
+                                    <f:validateLength minimum="3"/>
+                                </p:inputText>
+
+                                <p:outputLabel value="Coord Eixo:"/>
+                                <p:inputText id="coordeixo" value="#{cursoBean.curso.coordenador_eixo}"/>
+
+
+
+                                <p:commandButton value="Salvar"
+                                                 actionListener="#{cursoBean.novo()}" update="formcurso :mensagem"/>
+
+                                <p:commandButton value="Limpar" type="reset"/>
+                            </h:panelGrid>
+                        </h:form>
+
+                    </p:tab>
+                </p:tabView>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

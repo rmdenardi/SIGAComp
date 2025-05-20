@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="templateaplicacao.xhtml">
+
+            <ui:define name="corpo">
+                <p:growl id="mensagem"/>
+                <h:form id="formaluno">
+                    <p:poll interval="30" update="tabela"/>
+
+                    <p:dataTable id="tabela" var="aluna" value="#{alunoBean.lista}" rows="8" paginator="true"
+                                 selectionMode="single" selection="#{alunoBean.aluno}" rowKey="#{aluna.id}"
+                                 emptyMessage="Aluno não encontrado!" filteredValue="#{alunoBean.alunosencontrados}">
+                        <f:facet name="header">
+                            Alunos disponíveis
+                        </f:facet>
+
+                        <h:inputHidden value="#{aluna.id}"/>
+
+
+                        <p:column id="nome" headerText="Nome"
+                                  filterBy="#{aluna.nome}"> 
+                            <h:outputText value="#{aluna.nome}"/>
+                        </p:column>
+
+                        <p:column headerText="Telefone">
+                            <h:outputText value="#{aluna.telefone}"/>
+                        </p:column>
+
+                        <p:column headerText="Email">
+                            <h:outputText value="#{aluna.email}"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            
+                            <p:commandButton icon="ui-icon-search" style="font-family: Arial, sans-serif; background-color: appworkspace; 
+                                             border: 1px solid; margin-left: 10px; padding: 2px;"
+                                             onclick="PF('dialogoedicao').show()"  update=":formedicao"
+                                             rendered="#{autenticacaoBean.usuario.nivel != 1}"> 
+
+                            </p:commandButton>
+
+                            <p:commandButton icon="ui-icon-pencil" rendered="#{autenticacaoBean.usuario.nivel != 2}" style="font-family: Arial, sans-serif; background-color: appworkspace; 
+                                             border: 1px solid; margin-left: 10px; padding: 2px;"
+                                             onclick="PF('dialogoedicao').show()"  update=":formedicao"> 
+
+                            </p:commandButton>
+
+                            <p:commandButton icon="ui-icon-trash" rendered="#{autenticacaoBean.usuario.nivel != 2}" style=" font-family: Arial, sans-serif; background-color: appworkspace;
+                                             border: 1px solid; margin-left: 50px; padding:2px;" 
+                                             action="#{alunoBean.excluir()}" update="formaluno :mensagem"/>
+                        </f:facet>
+
+                    </p:dataTable>
+
+
+
+                </h:form>
+
+                <p:dialog widgetVar="dialogoedicao" modal="true" appendTo="@(body)"  id="dialogo" draggable="false" closable="false"
+                          resizable="false" >
+                    <f:facet name="header">
+                        Aluno
+                    </f:facet>
+
+                    <p:growl id="mensagemedicao"/>
+                    <h:form id="formedicao">
+                        <h:inputHidden value="#{alunoBean.aluno.id}"/>
+
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel for="nome" value="Nome:"/>
+                            <p:inputText  id="nome" value="#{alunoBean.aluno.nome}" required="true"  maxlength="45"
+                                          requiredMessage="nome é necessário" validatorMessage="Nome deve ter no mínimo 
+                                          3 caracteres" disabled="#{autenticacaoBean.usuario.nivel == 2}">
+                                <f:validateLength minimum="3"/>
+                            </p:inputText>
+
+                            <p:outputLabel value="Data nasc:" for="data"/>
+                            <p:inputMask mask="99/99/9999" value="#{alunoBean.aluno.data}" id="data" required="true"
+                                         requiredMessage="data de nascimento é necessária" disabled="#{autenticacaoBean.usuario.nivel == 2}">
+                                <f:convertDateTime dateStyle="default" timeZone="America/Fortaleza"/>
+                            </p:inputMask>
+                           
+
+                            <p:outputLabel for="phone" value="Telefone:" />
+                            <p:inputMask id="phone" value="#{alunoBean.aluno.telefone}" required="true"
+                                         mask="(99) 99999-9999"
+                                         requiredMessage="telefone é necessário" disabled="#{autenticacaoBean.usuario.nivel == 2}"/>
+
+
+                            <p:outputLabel for="email" value="Email:" />
+                            <p:inputText type="email" id="email" value="#{alunoBean.aluno.email}" required="true" placeholder="usuario@gmail.com"
+                                         validatorMessage="Email inválido" requiredMessage="Email é necessário" maxlength="60" disabled="#{autenticacaoBean.usuario.nivel == 2}">
+                                <f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+                            </p:inputText>
+
+                            <p:outputLabel for="naturalidade" value="Naturalidade:"/>
+                            <p:inputTextarea id="naturalidade" value="#{alunoBean.aluno.naturalidade}" required="true" maxlength="45" rows="3"
+                                             requiredMessage="Naturalidade é necessária" validatorMessage="Naturalidade deve ter no
+                                             mínimo 3 caracteres" disabled="#{autenticacaoBean.usuario.nivel == 2}">
+                                <f:validateLength minimum="3"/>
+                            </p:inputTextarea>
+
+                            <p:outputLabel for="endereco" value="Endereço: " />
+                            <p:inputTextarea id="endereco" value="#{alunoBean.aluno.endereco}" required="true"
+                                             requiredMessage="Endereço é necessário" maxlength="80" rows="4"
+                                             validatorMessage="Endereço deve ter no mínimo 3 caracteres" disabled="#{autenticacaoBean.usuario.nivel == 2}">
+                                <f:validateLength minimum="3"/> 
+                            </p:inputTextarea>
+
+                            <p:outputLabel for="turma" value="Turma:" />
+                            <p:selectOneMenu id="turma" filter="true" value="#{alunoBean.aluno.turma_id}" required="true"
+                                             requiredMessage="turma é necessária" disabled="#{autenticacaoBean.usuario.nivel == 2}">
+                                <f:selectItems value="#{turmaBean.listarturmas}" var="turma"
+                                               itemLabel="#{turma.nome}"
+                                               itemValue="#{turma.id}"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salvar" action="#{alunoBean.editar()}" 
+                                             oncomplete="if(args.edicao == true){PF('dialogoedicao').hide();}" 
+                                             update="formedicao :mensagemedicao :formaluno" rendered="#{autenticacaoBean.usuario.nivel != 2}"/>
+                            <p:commandButton value="Fechar"
+                                             onclick="PF('dialogoedicao').hide()"
+                                             resetValues="true" update=":formedicao" />
+
+
+                        </h:panelGrid>
+
+
+                    </h:form>
+                </p:dialog>
+
+
+
+
+
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

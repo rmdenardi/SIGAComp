@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="templateaplicacao.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="corpo">
+
+        <p:growl id="mensagem"/>
+        <h:form id="formturma">
+            <p:poll interval="30" update="tabela"/>
+                    <p:dataTable id="tabela" var="turma" value="#{turmaBean.lista}" rows="8" 
+                         paginator="true" 
+                         emptyMessage="turma não encontrada!" selectionMode="single" selection="#{turmaBean.turma}"
+                         rowKey="#{turma.id}" filteredValue="#{turmaBean.turmasencontradas}">
+
+                <f:facet name="header">
+                    Turmas disponíveis
+                </f:facet>
+                
+                
+                <h:inputHidden value="#{turma.id}"/>
+                <p:column headerText="Nome"
+                          filterBy="#{turma.nome}"> 
+                    <h:outputText value="#{turma.nome}"/>
+                </p:column>
+
+                <p:column headerText="Ano">
+                    <h:outputText value="#{turma.ano}"/>
+                </p:column>
+
+                <p:column headerText="Líder">
+                    <h:outputText value="#{turma.lider}"/>
+                </p:column>
+
+                <p:column headerText="Conselheiro">
+                    <h:outputText value="#{turma.conselheiro}"/>
+                </p:column>
+
+
+                <f:facet name="footer">
+
+                    <p:commandButton icon="ui-icon-pencil" rendered="#{autenticacaoBean.usuario.nivel != 2}" style="background-color: appworkspace; 
+                                     border: 1px solid; margin-left: 1px; padding: 2px"
+                                     onclick="PF('dialogoedicao').show()" update=":formedicao" /> 
+                    
+                    <p:commandButton icon="ui-icon-trash" rendered="#{autenticacaoBean.usuario.nivel != 2}" style="background-color: appworkspace;
+                                     border: 1px solid; margin-left: 50px; padding: 2px" action="#{turmaBean.excluir()}"
+                                     update="formturma :mensagem"/> 
+
+
+
+
+                </f:facet>
+
+
+            </p:dataTable>
+
+        </h:form>
+        
+        <p:dialog widgetVar="dialogoedicao" appendTo="@(body)" id="dialogo" modal="true" draggable="false"
+                  resizable="false" closable="false">
+                    <f:facet name="header">
+                        Editar Turma
+                    </f:facet>
+
+                    <h:form id="formedicao"> 
+                        <h:inputHidden value="#{turmaBean.turma.id}"/>
+                     <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel for="ano" value="Ano:" />
+                        <p:inputMask mask="9999" id="ano" value="#{turmaBean.turma.ano}" required="true" requiredMessage="ano é necessário"/>
+
+                        <p:outputLabel for="nome" value="Nome:" />
+                        <p:inputText id="nome" value="#{turmaBean.turma.nome}" required="true" requiredMessage="nome é necessário"
+                                     maxlength="45"
+                                     validatorMessage="Nome deve ter no mínimo 3 caracteres">
+                            <f:validateLength minimum="3"/>
+                        </p:inputText>    
+
+                        <p:outputLabel for="lider" value="Líder:" />
+                        <p:inputText id="lider" value="#{turmaBean.turma.lider}"/>
+
+                        <p:outputLabel for="conselheiro" value="Conselheiro:"/>
+                        <p:inputText id="conselheiro" value="#{turmaBean.turma.conselheiro}"/>
+
+                        <p:outputLabel for="curso" value="Curso:" />
+                        <p:selectOneMenu filter="true" id="curso" value="#{turmaBean.turma.curso_id}" required="true" 
+                                         requiredMessage="curso é necessário">
+                            <f:selectItems value="#{cursoBean.listarcursos}" var="curso"
+                                           itemLabel="#{curso.nome}" itemValue="#{curso.id}"/>
+                        </p:selectOneMenu>
+
+                            <p:commandButton value="Salvar"
+                                             action="#{turmaBean.editar()}" update=":formedicao :formturma :mensagem"
+                                             oncomplete="if(args.edicao == true){PF('dialogoedicao').hide();}"/>
+                            <p:commandButton value="Fechar" onclick="PF('dialogoedicao').hide()"
+                                     resetValues="true" update=":formedicao"/>
+
+                        </h:panelGrid>
+
+                    </h:form>
+
+
+                </p:dialog>     
+    </ui:define>
+
+</ui:composition>

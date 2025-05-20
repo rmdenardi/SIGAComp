@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../publico/templateaplicacao.xhtml">
+
+            <ui:define name="corpo">
+                <p:growl id="mensagem"/>
+                <p:notificationBar position="top" id="notificacao" widgetVar="notificacao">
+                    <p:outputLabel value="Processando..."/>
+                </p:notificationBar>
+                
+                <p:tabView style="border: none">
+                    <p:tab title="Cadastro de Servidor">
+                        <h:form id="formservidor">
+                            
+                            <h:inputHidden value="#{usuarioBean.usuario.id}"/>
+
+                            <h:panelGrid columns="2" cellpadding="5">
+
+                                <p:outputLabel value="Cargo:" for="cargo"/>
+                                <p:inputText  id="cargo" value="#{usuarioBean.usuario.cargo}" required="true"
+                                              requiredMessage="cargo é necessário" maxlength="45" validatorMessage="Cargo deve ter no
+                                              mínimo 5 caracteres">
+                                    <f:validateLength minimum="5"/>
+                                </p:inputText>
+
+                                <p:outputLabel value="Nome:" for="nome"/>
+                                <p:inputText  id="nome" value="#{usuarioBean.usuario.nome}" required="true"
+                                              requiredMessage="nome é necessário" maxlength="45" 
+                                              validatorMessage="Nome deve conter no mínimo 3 caracteres">
+                                    <f:validateLength minimum="3"/>
+
+
+                                </p:inputText>
+
+                                <p:outputLabel for="phone" value="Telefone:" />
+                                <p:inputMask id="phone" value="#{usuarioBean.usuario.telefone}" 
+                                             required="true" mask="(99) 99999-9999" requiredMessage="Telefone é necessário"/>
+
+                                <p:outputLabel for="email" value="Email:"/>
+                                <p:inputText id="email" value="#{usuarioBean.usuario.email}" required="true" placeholder="servidor@gmail.com"
+                                             requiredMessage="email é necessário" validatorMessage="Email inválido" maxlength="60">
+                                    <f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+                                </p:inputText>
+
+                                <p:outputLabel value="Nível:" for="nivel"/>
+                                <p:selectOneRadio id="nivel" value="#{usuarioBean.usuario.nivel}" required="true"
+                                                  requiredMessage="nível é necessário">
+                                    <f:selectItem itemValue="1" itemLabel="Administrador"/>
+                                    <f:selectItem itemValue="2" itemLabel="Servidor"/>
+                                </p:selectOneRadio>
+
+                                <p:outputLabel for="login" value="Login: "/>
+                                <p:inputText id="login" value="#{usuarioBean.usuario.login}" required="true" maxlength="10"
+                                             requiredMessage="login é necessário" validatorMessage="Login deve 
+                                             ter no mínimo 4 caracteres minúsculos">
+                                    <f:validateRegex pattern="[a-z]{4,10}"/>
+                                </p:inputText>
+
+                                <p:outputLabel for="senha" value="Senha:" />
+                                <p:password id="senha" value="#{usuarioBean.usuario.senha}"
+                                            required="true" maxlength="8" requiredMessage="senha é necessária" 
+                                            validatorMessage="Senha deve ter no minímo 6 caracteres">
+                                    <f:validateLength minimum="6"/>
+
+                                </p:password>
+                                
+                                <p:outputLabel value="Confirmar Senha:" for="confirmarsenha" />
+                                <p:password id="confirmarsenha" value="#{usuarioBean.usuario.confirmarsenha}" required="true" requiredMessage="Confirmar senha é necessário"
+                                            validatorMessage="Confirmar Senha deve ter no mínimo 6 caracteres">
+                                    <f:validateLength minimum="6"/>
+                                </p:password>
+                                
+
+                                <p:outputLabel value="Setor:" for="setor" />
+                                <p:selectOneMenu filter="true" id="setor" value="#{usuarioBean.usuario.setor_id}" required="true"
+                                                 requiredMessage="setor é necessário ">
+                                    <f:selectItems value="#{setorBean.listaSetor}" var="setor"
+                                                   itemLabel="#{setor.nome}" itemValue="#{setor.id}"/>
+
+                                </p:selectOneMenu>
+
+                                <p:commandButton value="Salvar"
+                                                 actionListener="#{usuarioBean.novo()}" onclick="PF('notificacao').show()" 
+                                                 update="formservidor :notificacao :mensagem"/>
+                                <p:commandButton value="Limpar" actionListener="#{usuarioBean}" />
+
+
+                            </h:panelGrid>
+
+
+
+                        </h:form>
+                    </p:tab>
+                </p:tabView>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

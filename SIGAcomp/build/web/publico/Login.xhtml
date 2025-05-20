@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/cssaplicacao.css"/>
+        <title> Login - Sistema Web Gerencial para Acompanhamento de alunos</title>
+    </h:head>
+
+    <body>
+
+        <h:form id="form">
+
+
+            <br/> <br/>
+
+            <p:growl id="mensagem"/> 
+            <p:panelGrid style=" margin-top: 140px; margin-left: 470px; margin-right: 520px;" columns="2">
+
+                <f:facet name="header">
+                    <p:outputLabel value="SIGAcomp - Sistema Web Gerencial para acompanhamento de alunos"/>
+                </f:facet>
+                <p:outputLabel for="login" value="Login:" /> 
+                <p:inputText id="login" value="#{autenticacaoBean.usuario.login}" 
+                             required="true" maxlength="10"
+                             requiredMessage="Login é necessário"/>
+
+                <p:outputLabel for="senha" value="Senha: " /> 
+                <p:password id="senha" value="#{autenticacaoBean.usuario.senha}"
+                            required="true" maxlength="8"
+                            requiredMessage="Senha é necessária"/>
+                <p:commandButton value="Entrar"
+                                 action="#{autenticacaoBean.verificarUsuario()}"
+                                 update="mensagem @form" />
+
+            </p:panelGrid> 
+
+        </h:form>
+
+        <h:form id="recuperarsenha">
+            <p:panelGrid style=" margin-top: 140px; margin-left: 470px; margin-right: 520px;" columns="2">
+                <p:outputLabel value="Esqueceu sua senha? "/> 
+                <p:commandButton value="clique aqui" action="#{usuarioBean.navegarRecuperacaoSenha()}"/>
+
+            </p:panelGrid>
+
+        </h:form>
+
+    </body>
+</html>

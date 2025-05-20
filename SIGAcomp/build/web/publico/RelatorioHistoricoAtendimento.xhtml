@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./Templateaplicacao.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="corpo">
+
+        <p:growl id="mensagem"/>
+        <p:notificationBar id="barranotificacao">
+            <p:outputLabel value="Processando..."/>
+        </p:notificationBar>
+        <p:tabView style="border: none;">
+            <p:tab title="Relatório - Histórico de Atendimento do aluno">
+                <h:form>
+
+                    <p:poll interval="30" update="tabela"/>
+                    <p:dataTable style="width: 800px;" id="tabela" var="aluno" value="#{atendimentoBean.alunosencontrados}" 
+                                 selectionMode="single" selection="#{relatorioBean.aluno}" rowKey="#{aluno.id}"
+                                 rows="3" paginator="true" emptyMessage="Aluno não encontrado!" filteredValue="#{atendimentoBean.alunosfiltrados}">
+                        <f:facet name="header">
+                            Selecione o Aluno
+                        </f:facet>
+                       
+                        <h:inputHidden value="#{aluno.id}"/>
+                        <p:column headerText="Nome" filterBy="#{aluno.nome}">
+                            <h:outputText value="#{aluno.nome}" />
+                        </p:column>
+                        
+                         <p:column headerText="Turma" filterBy="#{aluno.turma.nome}">
+                            <h:outputText value="#{aluno.turma.nome}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Telefone">
+                            <h:outputText value="#{aluno.telefone}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Email" filterBy="#{aluno.email}">
+                            <h:outputText value="#{aluno.email}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                    <br></br>
+
+                    <p:panelGrid columns="2">
+                        <f:facet name="header">
+                            <p:outputLabel value="Informe o Período"/>
+                        </f:facet>
+
+                        <p:outputLabel value="Data Início: "/>
+                        <p:calendar maxdate="today" value="#{relatorioBean.data_inicial}" required="true" requiredMessage="Data Início é necessária"/>
+
+                        <p:outputLabel value="Data Fim:"/>
+                        <p:calendar maxdate="today" value="#{relatorioBean.data_final}" required="true" requiredMessage="Data Fim é necessária"/>
+                    </p:panelGrid>
+                    <br></br>
+
+                    <p:commandButton value="Gerar" ajax="false" action="#{relatorioBean.gerarRelatorioHistorico()}" 
+                                     update=":mensagem"/>
+                </h:form>   
+            </p:tab>
+        </p:tabView>
+
+
+    </ui:define>
+
+</ui:composition>

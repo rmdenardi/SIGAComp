@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="templateaplicacao.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="corpo">
+        <p:growl id="mensagem"/>
+        <h:form id="formsituacao">
+            <p:poll interval="30" update="tabela"/>
+            <p:dataTable id="tabela" value="#{situacaoBean.situacoes}" var="sit" paginator="true" rows="8" 
+                         emptyMessage="situação não encontrada!" selectionMode="single" selection="#{situacaoBean.situacao}"
+                         rowKey="#{sit.id}" filteredValue="#{situacaoBean.situacoesencontradas}">
+                <f:facet name="header">
+                    Situações disponíveis
+                </f:facet>
+
+                <h:inputHidden value="#{sit.id}"/>
+
+                <p:column headerText="Descrição" filterBy="#{sit.descricao}">
+                    <h:outputText value="#{sit.descricao}"/>
+                </p:column>
+
+                <f:facet name="footer">
+                    <p:commandButton icon="ui-icon-pencil" rendered="#{autenticacaoBean.usuario.nivel != 2}" style="font-family: Arial, sans-serif; 
+                                     background-color: appworkspace; border: 1px solid; 
+                                     margin-left: 10px; padding: 2px" onclick="PF('dialogoedicao').show()" update=":formedicao"/>
+
+
+                    <p:commandButton icon="ui-icon-trash"  rendered="#{autenticacaoBean.usuario.nivel != 2}" id="exclusao" style="font-family: Arial, sans-serif; 
+                                     background-color: appworkspace; border: 1px solid; 
+                                     margin-left: 50px; padding: 2px" action="#{situacaoBean.excluir()}" update="formsituacao :mensagem"/>
+
+                </f:facet>
+
+
+            </p:dataTable>
+        </h:form>
+
+
+        <p:dialog widgetVar="dialogoedicao" appendTo="@(body)" id="dialogoedicao" modal="true"
+                  draggable="false" resizable="false" closable="false">
+            <f:facet name="header">
+                Editar Situação
+            </f:facet>
+
+            <h:form id="formedicao">
+                <h:inputHidden value="#{situacaoBean.situacao.id}"/>
+
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel for="desc" value="Descrição:"/>
+                    <p:inputTextarea  id="desc" value="#{situacaoBean.situacao.descricao}" required="true" 
+                                      requiredMessage="Descrição é necessária" maxlength="45" rows="2"
+                                      validatorMessage="Descrição deve ter no mínimo 2 caracteres">
+                        <f:validateLength minimum="2"/>
+                    </p:inputTextarea>    
+
+                        <p:commandButton value="Salvar" action="#{situacaoBean.editar()}" 
+                                         update=":formedicao :formsituacao :mensagem" 
+                                         oncomplete="if(args.edicao == true){PF('dialogoedicao').hide();}" />
+                        <p:commandButton value="Fechar" onclick="PF('dialogoedicao').hide()"
+                                     resetValues="true" update=":formedicao"/>
+
+                </h:panelGrid>
+
+
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>

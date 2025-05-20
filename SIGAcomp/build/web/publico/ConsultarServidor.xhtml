@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="templateaplicacao.xhtml">
+
+            <ui:define name="corpo">
+                <p:growl id="mensagem"/>
+                <h:form id="formservidor">
+
+                    <p:poll interval="30" update="tabela"/>
+                    <p:dataTable id="tabela" var="servidor" value="#{usuarioBean.lista}" rows="8" 
+                               paginator="true"  selectionMode="single" selection="#{usuarioBean.usuario}" rowKey="#{servidor.id}"
+                                 emptyMessage="Servidor não encontrado!" filteredValue="#{usuarioBean.servidoresencontrados}">
+                        <f:facet name="header">
+                            Servidores Disponíveis
+                        </f:facet>
+
+
+                        <h:inputHidden value="#{servidor.id}"/>
+
+                        <p:column headerText="Nome" filterBy="#{servidor.nome}"> 
+                            <h:outputText value="#{servidor.nome}"/>
+                        </p:column>
+
+                        <p:column headerText="Email">
+                            <h:outputText value="#{servidor.email}"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            
+                            <p:commandButton icon="ui-icon-pencil" rendered="#{autenticacaoBean.usuario.nivel != 2}" style="font-family: Arial, sans-serif; background-color: appworkspace; 
+                                             border: 1px solid; margin-left: 1px; padding: 2px"
+                                             onclick="PF('dialogoedicao').show()" update=":formedicao"/>
+
+                            <p:commandButton icon="ui-icon-trash"  rendered="#{autenticacaoBean.usuario.nivel != 2}" style=" font-family: Arial, sans-serif; background-color: appworkspace;
+                                             border: 1px solid; margin-left: 50px; padding: 2px" 
+                                             action="#{usuarioBean.excluir()}" update="formservidor :mensagem"/> 
+
+                        </f:facet>
+
+                    </p:dataTable>
+
+
+
+
+                </h:form>
+
+                <p:dialog widgetVar="dialogoedicao" appendTo="@(body)" id="dialogo" modal="true" draggable="false"
+                          closable="false"  resizable="false">
+                    <f:facet name="header">
+                        Editar Servidor
+                    </f:facet>
+
+                    <h:form id="formedicao">  
+                        <h:inputHidden value="#{usuarioBean.usuario.id}"/>
+
+                        <h:panelGrid columns="2" cellpadding="5">
+
+                            <p:outputLabel value="Cargo:" for="cargo"/>
+                            <p:inputText  id="cargo" value="#{usuarioBean.usuario.cargo}" required="true"
+                                          requiredMessage="cargo é necessário" maxlength="45" validatorMessage="Cargo deve ter no
+                                          mínimo 5 caracteres">
+                                <f:validateLength minimum="5"/>
+                            </p:inputText>
+
+                            <p:outputLabel value="Nome:" for="nome"/>
+                            <p:inputText  id="nome" value="#{usuarioBean.usuario.nome}" required="true"
+                                          requiredMessage="nome é necessário" maxlength="45" 
+                                          validatorMessage="Nome deve conter no mínimo 3 caracteres">
+                                <f:validateLength minimum="3"/>
+
+
+                            </p:inputText>
+
+                            <p:outputLabel for="phone" value="Telefone:" />
+                            <p:inputMask id="phone" value="#{usuarioBean.usuario.telefone}" 
+                                         required="true" mask="(99) 99999-9999" requiredMessage="Telefone é necessário"/>
+
+                            <p:outputLabel for="email" value="Email:"/>
+                            <p:inputText id="email" value="#{usuarioBean.usuario.email}" required="true" placeholder="servidor@gmail.com"
+                                         requiredMessage="email é necessário" validatorMessage="Email inválido" maxlength="60">
+                                <f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+                            </p:inputText>
+
+                            <p:outputLabel value="Nível:" for="nivel"/>
+                            <p:selectOneRadio id="nivel" value="#{usuarioBean.usuario.nivel}" required="true"
+                                              requiredMessage="nível é necessário">
+                                <f:selectItem itemValue="1" itemLabel="Administrador"/>
+                                <f:selectItem itemValue="2" itemLabel="Servidor"/>
+                            </p:selectOneRadio>
+
+                            <p:outputLabel for="login" value="Login: "/>
+                            <p:inputText id="login" value="#{usuarioBean.usuario.login}" required="true" maxlength="10"
+                                         requiredMessage="login é necessário" validatorMessage="Login deve 
+                                         ter no mínimo 4 caracteres minúsculos">
+                                <f:validateLength minimum="4"/>
+                            </p:inputText>
+
+                            <p:outputLabel for="senha" value="Senha:" />
+                            <p:inputText id="senha" value="#{usuarioBean.usuario.senha}"
+                                         required="true" maxlength="8" requiredMessage="senha é necessária" validatorMessage="Senha deve ter no mínimo 6 caracteres">
+                                <f:validateLength minimum="6"/>
+
+                            </p:inputText>
+
+                            <p:outputLabel value="Setor:" for="setor" />
+
+                            <p:selectOneMenu filter="true" id="setor" value="#{usuarioBean.usuario.setor_id}" required="true"
+                                             requiredMessage="setor é necessário ">
+                                <f:selectItems value="#{setorBean.listaSetor}" var="setor"
+                                               itemLabel="#{setor.nome}" itemValue="#{setor.id}"/>
+
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salvar"
+                                             action="#{usuarioBean.editar()}" update="formedicao :formservidor :mensagem"
+                                             oncomplete="if(args.edicao == true){PF('dialogoedicao').hide()}"/>
+                            <p:commandButton value="Fechar" onclick="PF('dialogoedicao').hide()"
+                                     resetValues="true" update=":formedicao"/>
+
+                        </h:panelGrid>
+
+                    </h:form>
+                </p:dialog>  
+
+
+
+
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
